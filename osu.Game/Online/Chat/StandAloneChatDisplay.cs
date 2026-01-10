@@ -945,7 +945,9 @@ namespace osu.Game.Online.Chat
                 AllowedMods = item.AllowedMods
             };
 
-            var itemsToRemove = Client.Room?.Playlist.Where(playlistItem => !playlistItem.Expired).ToArray() ?? Array.Empty<MultiplayerPlaylistItem>();
+            var itemsToRemove = Client.Room?.Playlist
+                                      .Where(playlistItem => !playlistItem.Expired)
+                                      .ToArray() ?? Array.Empty<MultiplayerPlaylistItem>();
             Task addPlaylistItemTask = Client.AddPlaylistItem(multiplayerItem);
 
             addPlaylistItemTask.FireAndForget(onSuccess: () =>
@@ -979,7 +981,9 @@ namespace osu.Game.Online.Chat
                     continue;
                 }
 
-                if (multiplayerRefereeTracker.Referees.Any(refereeApiUser => refereeApiUser.Equals(message.Sender)))
+                if (parts[0] == @"!mp" && multiplayerRefereeTracker
+                                          .Referees
+                                          .Any(refereeApiUser => refereeApiUser.Equals(message.Sender)))
                 {
                     // sender is a referee, execute command on their behalf
                     Logger.Log($@"Executing '{message.Content}' on behalf of referee {message.Sender}");
